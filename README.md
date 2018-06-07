@@ -2,6 +2,6 @@
 
 For messing around with the automl idea.
 
-Run the main in WebCamSensorStreamWithGUI
+Run the main in WebCamLabGUI.
 
 
