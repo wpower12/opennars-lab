@@ -1,6 +1,7 @@
 package org.opennars.lab.sensor;
 
 import org.opennars.gui.NARSwing;
+import org.opennars.lab.sensor.SensorStreams.WebCamSensorStream;
 import org.opennars.main.Nar;
 
 /**
@@ -8,11 +9,11 @@ import org.opennars.main.Nar;
  *
  */
 
-public class WebCamSensorStreamWithGUI {
+public class WebCamLabGUI {
 
     static Nar reasoner;
 
-    public WebCamSensorStreamWithGUI(){
+    public WebCamLabGUI(){
         reasoner = new Nar();
         reasoner.addPlugin(new AutoMLPlugin());
         reasoner.addPlugin(new WebCamSensorStream());
@@ -27,7 +28,7 @@ public class WebCamSensorStreamWithGUI {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new WebCamSensorStreamWithGUI();
+                new WebCamLabGUI();
             }
         });
     }

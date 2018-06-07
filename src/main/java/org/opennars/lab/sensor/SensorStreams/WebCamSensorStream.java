@@ -1,12 +1,10 @@
-package org.opennars.lab.sensor;
+package org.opennars.lab.sensor.SensorStreams;
 
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
-import org.opennars.io.events.EventEmitter;
-import org.opennars.io.events.Events;
-import org.opennars.main.Nar;
-import org.opennars.plugin.Plugin;
+import org.opennars.lab.sensor.FrameEvents;
+import org.opennars.lab.sensor.SensorStreams.SensorStreamPlugin;
 import org.opennars.storage.Memory;
 
 /**
@@ -19,9 +17,7 @@ import org.opennars.storage.Memory;
  * The event can then be captured by the autoML plugin.
  */
 
-public class WebCamSensorStream implements Plugin {
-
-    public EventEmitter.EventObserver obs;
+public class WebCamSensorStream extends SensorStreamPlugin {
 
     private FrameGrabber grabber;
     private CanvasFrame frame;
@@ -37,6 +33,7 @@ public class WebCamSensorStream implements Plugin {
         }
     }
 
+    // TODO - need to figure out how to call this when the gui dies.
     public void close(){
         frame.dispose();
         try {
@@ -47,29 +44,19 @@ public class WebCamSensorStream implements Plugin {
     }
 
     @Override
-    public boolean setEnabled(Nar nar, boolean b) {
-        final Memory memory = nar.memory;
+    void emit(Memory memory) {
+        if(grabber != null){
+            try {
+                Frame f = grabber.grab();
+                frame.showImage(f);
 
-        if(obs == null){
-            obs = (event, a) -> {
-                if(event == Events.CycleStart.class){
-                    if(grabber != null){
-                        try {
-                            Frame f = grabber.grab();
-                            frame.showImage(f);
+                // Sending the frame itself as an optional value.
+                memory.event.emit(FrameEvents.FrameArrived.class, f);
 
-                            // Sending the frame itself as an optional value.
-                            memory.event.emit(FrameEvents.FrameArrived.class, f);
-
-                        } catch (FrameGrabber.Exception e) {
-                            // blarg.
-                        }
-                    }
-                }
-            };
-            memory.event.set(obs, b, Events.CycleStart.class);
+            } catch (FrameGrabber.Exception e) {
+                // blarg.
+            }
         }
-        return b;
     }
 
     @Override
