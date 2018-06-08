@@ -2,6 +2,7 @@
 
 For messing around with the automl idea.
 
-Run the main in WebCamLabGUI.
+A standalone GUI can be ran from WebCamSensorLabGUI
 
+LanguageGUI contains a modified langauge lab whose reasoner includes the WebCamSensorPlugin and the AutoMLPlugin.
 
