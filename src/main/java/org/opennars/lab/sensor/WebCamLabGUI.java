@@ -16,7 +16,7 @@ public class WebCamLabGUI {
     public WebCamLabGUI(){
         reasoner = new Nar();
         reasoner.addPlugin(new AutoMLPlugin());
-        reasoner.addPlugin(new WebCamSensorStream());
+        reasoner.addPlugin(new WebCamSensorStream("webcam1"));
 
         NARSwing gui = new NARSwing(reasoner);
         reasoner.start(0);

@@ -3,8 +3,7 @@ package org.opennars.lab.sensor.SensorStreams;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
-import org.opennars.lab.sensor.FrameEvents;
-import org.opennars.lab.sensor.SensorStreams.SensorStreamPlugin;
+import org.opennars.lab.sensor.SensorEvents;
 import org.opennars.storage.Memory;
 
 /**
@@ -22,8 +21,9 @@ public class WebCamSensorStream extends SensorStreamPlugin {
     private FrameGrabber grabber;
     private CanvasFrame frame;
 
-    public WebCamSensorStream(){
+    public WebCamSensorStream(String n){
         try {
+            name = n;
             grabber = FrameGrabber.createDefault(0);
             grabber.start();
             frame = new CanvasFrame("Camera Feed", CanvasFrame.getDefaultGamma()/grabber.getGamma());
@@ -43,15 +43,23 @@ public class WebCamSensorStream extends SensorStreamPlugin {
         }
     }
 
+    /**
+     * Part of the SensorStreamPlugin Interface.
+     *
+     * SensorStreams need to dictate how they grab their frame.
+     * Also a good place to do things like paint a canvas.
+     *
+     * @param memory
+     */
     @Override
-    void emit(Memory memory) {
+    void emitFrame(Memory memory) {
         if(grabber != null){
             try {
                 Frame f = grabber.grab();
                 frame.showImage(f);
 
                 // Sending the frame itself as an optional value.
-                memory.event.emit(FrameEvents.FrameArrived.class, f);
+                memory.event.emit(SensorEvents.FrameArrived.class, name, f);
 
             } catch (FrameGrabber.Exception e) {
                 // blarg.

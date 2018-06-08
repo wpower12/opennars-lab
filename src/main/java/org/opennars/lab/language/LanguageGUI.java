@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.opennars.lab.sensor.AutoMLPlugin;
+import org.opennars.lab.sensor.SensorStreams.WebCamSensorStream;
 import org.opennars.main.Nar;
 import org.opennars.entity.Sentence;
 import org.opennars.gui.NARSwing;
@@ -49,7 +52,7 @@ public class LanguageGUI extends javax.swing.JFrame {
         
         String everything;
         try {
-            everything = new Scanner(new File(".\\nars_lab\\org.opennars\\lab\\language\\language_knowledge.nal")).useDelimiter("\\Z").next();
+            everything = new Scanner(new File("language_knowledge.nal")).useDelimiter("\\Z").next();
             jTextPane1.setText(everything);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LanguageGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,6 +68,9 @@ public class LanguageGUI extends javax.swing.JFrame {
             
         languageNAR = new Nar();
         reasonerNAR = new Nar();
+        reasonerNAR.addPlugin(new AutoMLPlugin());
+        reasonerNAR.addPlugin(new WebCamSensorStream("webcam1"));
+
         NARSwing lang = new NARSwing(languageNAR);
         lang.mainWindow.setTitle("Language Nar (OpenNARS v1.6.5)");
         NARSwing reas = new NARSwing(reasonerNAR);  
